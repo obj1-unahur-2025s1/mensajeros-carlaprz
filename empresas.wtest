@@ -1,0 +1,54 @@
+import empresas.*
+import mensajerosDePelicula.*
+
+describe "Empresa de mensajeria | test" {
+  test "Contratar a un mensajero" {
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(1, empresaDeMensajeria.mensajeros().size())
+  }
+  
+  test "Despedir a un mensajero" {
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(1, empresaDeMensajeria.mensajeros().size())
+    empresaDeMensajeria.despedirMensajero(roberto)
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+  }
+  
+  test "Despedir a todos los mensajeros" {
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(1, empresaDeMensajeria.mensajeros().size())
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+  }
+  
+  test "Analizar si la mensajeria es grande (si tiene mas de dos mensajeros)" {
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(1, empresaDeMensajeria.mensajeros().size())
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+  }
+  
+  test "Consultar si el paquete puede ser entregado por el primer empleado de la la empresa de mensajería." {
+    roberto.transporte(bicicleta)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.contratarMensajero(chuckNorris)
+    assert.equals(2, empresaDeMensajeria.mensajeros().size())
+    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puendeBrooklyn)
+    assert.equals(
+      false,
+      empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(
+        puendeBrooklyn
+      )
+    )
+  }
+  
+  test "Saber el peso del último mensajero de la empresa." {
+    roberto.transporte(camion)
+    paquete.puedeSerEntregado(roberto, puendeBrooklyn)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puendeBrooklyn)
+    assert.equals(roberto.peso(), empresaDeMensajeria.pesoDelUltimoMensajero())
+  }
+}

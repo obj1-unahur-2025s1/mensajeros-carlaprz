@@ -80,6 +80,6 @@ object puendeBrooklyn {
   method puedePasar(unMensajero) = unMensajero.peso() < 500
 }
 
-object matriz {
+object matrix {
   method puedePasar(unMensajero) = unMensajero.puedeLlamar()
 }
