@@ -76,7 +76,7 @@ object telefono {
   
 }
 
-object puendeBrooklyn {
+object puenteBrooklyn {
   method puedePasar(unMensajero) = unMensajero.peso() < 500
 }
 

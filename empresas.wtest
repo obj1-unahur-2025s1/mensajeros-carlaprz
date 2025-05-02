@@ -35,20 +35,20 @@ describe "Empresa de mensajeria | test" {
     empresaDeMensajeria.contratarMensajero(roberto)
     empresaDeMensajeria.contratarMensajero(chuckNorris)
     assert.equals(2, empresaDeMensajeria.mensajeros().size())
-    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puendeBrooklyn)
+    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puenteBrooklyn)
     assert.equals(
       false,
       empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(
-        puendeBrooklyn
+        puenteBrooklyn
       )
     )
   }
   
   test "Saber el peso del último mensajero de la empresa." {
     roberto.transporte(camion)
-    paquete.puedeSerEntregado(roberto, puendeBrooklyn)
+    paquete.puedeSerEntregado(roberto, puenteBrooklyn)
     empresaDeMensajeria.contratarMensajero(roberto)
-    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puendeBrooklyn)
+    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puenteBrooklyn)
     assert.equals(roberto.peso(), empresaDeMensajeria.pesoDelUltimoMensajero())
   }
 }

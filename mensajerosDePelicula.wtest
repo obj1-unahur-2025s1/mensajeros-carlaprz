@@ -3,9 +3,9 @@ import mensajerosDePelicula.*
 describe "Mensajeros De Pelicula | test" {
   test "Que roberto (90kg) puede llevar un paquete que está pago en un camión que tiene un acoplado." {
     assert.equals(90, roberto.peso())
-    camion.cantidadDeAcoplados(1)
     roberto.transporte(camion)
-    paquete.puedeSerEntregado(roberto, puendeBrooklyn)
+    paquete.pagarEnvio()
+    assert.equals(true, paquete.puedeSerEntregado(roberto, puenteBrooklyn))
   }
   
   test "Que neo con crédito no puede llevar un paquete que no está pago a la matrix." {

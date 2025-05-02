@@ -18,7 +18,7 @@ object paquetonViajero {
   method sePuedeEntregar(
     unMensajero,
     unLugar
-  ) = (self.estaPago() && puendeBrooklyn.puedePasar(
+  ) = (self.estaPago() && puenteBrooklyn.puedePasar(
     unMensajero
   )) && matrix.puedePasar(unMensajero)
 }
