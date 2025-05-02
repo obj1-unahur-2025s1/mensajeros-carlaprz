@@ -1,11 +1,7 @@
-import mensajerosDePelicula.*
-
 object empresaDeMensajeria {
   const mensajeros = #{}
-  const paquetesPendientes = []
-  var facturacion = 0
-  
-  method facturacion() = facturacion
+  const pendientes = []
+  const enviados = []
   
   method contratarMensajero(unMensajero) {
     mensajeros.add(unMensajero)
@@ -22,56 +18,44 @@ object empresaDeMensajeria {
   method esGrande() = mensajeros.size() > 2
   
   method elPrimerMensajeroPuedeEntregarElPaquete(
-    unLugar
-  ) = paquete.puedeSerEntregado(mensajeros.asList().first(), unLugar)
+    unPaquete
+  ) = unPaquete.puedeSerEntregado(mensajeros.asList().first())
   
   method pesoDelUltimoMensajero() = mensajeros.asList().last().peso()
   
-  method algunoPuedeEntregar(unPaquete, unLugar) = mensajeros.any(
-    { unMensajero => unPaquete.puedeSerEntregado(unMensajero, unLugar) }
+  // Parte 3
+  method puedeEntregar(unPaquete) = mensajeros.any(
+    { m => unPaquete.puedeSerEntregado(m) }
   )
   
-  method mensajerosQuePuedenEntregar(unPaquete, unLugar) = mensajeros.filter(
-    { m => unPaquete.puedeSerEntregado(m, unLugar) }
+  method mensajerosQuePuedenEntregar(unPaquete) = mensajeros.filter(
+    { m => unPaquete.puedeSerEntregado(m) }
   )
   
-  method tieneSobrepeso() {
-    if (mensajeros.isEmpty()) {
-      return false
-    }
-    
-    return (mensajeros.map({ m => m.peso() }).sum() / mensajeros.size()) > 500
+  method tieneSobrepeso() = (mensajeros.sum(
+    { m => m.peso() }
+  ) / mensajeros.size()) > 500
+  
+  method enviar(unPaquete) = if (self.puedeEntregar(unPaquete)) enviados.add(
+                                 unPaquete
+                               )
+                             else pendientes.add(unPaquete)
+  
+  method facturacion() = enviados.sum({ p => p.precio() })
+  
+  method enviarTodos(paquetesAEnviar) = paquetesAEnviar.forEach(
+    { p => self.enviar(p) }
+  )
+  
+  method reenviarPaquete() {
+    const caro = self.pendienteCaro()
+    pendientes.remove(caro)
+    self.enviar(caro)
   }
   
-  method enviarPaquete(unPaquete, unLugar) {
-    const mensajero = self.mensajerosQuePuedenEntregar(
-      unPaquete,
-      unLugar
-    ).firstOrNull()
-    if (mensajero != null) {
-      facturacion += unPaquete.costo()
-    } else {
-      paquetesPendientes.add(unPaquete)
-    }
-  }
+  method pendienteCaro() = pendientes.max({ p => p.precio() })
   
-  method enviarPaquetes(paquetes, unLugar) {
-    paquetes.forEach({ p => self.enviarPaquete(p, unLugar) })
-  }
+  method mensajeros() = mensajeros
   
-  method enviarMasCaroPendiente(unLugar) {
-    const paqueteMasCaro = paquetesPendientes.sortBy(
-      { p => p.costo() }
-    ).lastOrNull()
-    if (paqueteMasCaro != null) {
-      const mensajero = self.mensajerosQuePuedenEntregar(
-        paqueteMasCaro,
-        unLugar
-      ).firstOrNull()
-      if (mensajero != null) {
-        facturacion += paqueteMasCaro.costo()
-        paquetesPendientes.remove(paqueteMasCaro)
-      }
-    }
-  }
+  method pendientes() = pendientes
 }

@@ -1,5 +1,8 @@
 import empresas.*
-import mensajerosDePelicula.*
+import mensajeros.*
+import destinos.*
+import transportes.*
+import paquetes.*
 
 describe "Empresa de mensajeria | test" {
   test "Contratar a un mensajero" {
@@ -31,24 +34,23 @@ describe "Empresa de mensajeria | test" {
   }
   
   test "Consultar si el paquete puede ser entregado por el primer empleado de la la empresa de mensajería." {
-    roberto.transporte(bicicleta)
+    roberto.cambiarTransporte(bicicleta)
     empresaDeMensajeria.contratarMensajero(roberto)
     empresaDeMensajeria.contratarMensajero(chuckNorris)
     assert.equals(2, empresaDeMensajeria.mensajeros().size())
-    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puenteBrooklyn)
+    
+    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(paquete)
     assert.equals(
       false,
-      empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(
-        puenteBrooklyn
-      )
+      empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(paquete)
     )
   }
   
   test "Saber el peso del último mensajero de la empresa." {
-    roberto.transporte(camion)
-    paquete.puedeSerEntregado(roberto, puenteBrooklyn)
+    roberto.cambiarTransporte(camion)
+    paquete.puedeSerEntregado(roberto)
     empresaDeMensajeria.contratarMensajero(roberto)
-    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(puenteBrooklyn)
+    empresaDeMensajeria.elPrimerMensajeroPuedeEntregarElPaquete(paquete)
     assert.equals(roberto.peso(), empresaDeMensajeria.pesoDelUltimoMensajero())
   }
 }

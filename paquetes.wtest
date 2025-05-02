@@ -1,0 +1,87 @@
+import paquetes.*
+import empresas.*
+import mensajeros.*
+import destinos.*
+import transportes.*
+
+describe "Mensajeria Recargada | test" {
+  test "Averiguar si un paquete puede ser entregado por la empresa de mensajería, es decir, si al menos uno de sus mensajeros puede entregar el paquete." {
+    camion.cantidadDeAcoplados(1)
+    roberto.cambiarTransporte(camion)
+    paquete.pagarEnvio()
+    assert.equals(false, paquete.puedeSerEntregado(roberto))
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.contratarMensajero(chuckNorris)
+    assert.equals(true, paquete.puedeSerEntregado(chuckNorris))
+    assert.equals(true, empresaDeMensajeria.puedeEntregar(paquete))
+  }
+  
+  test "Obtener todos los mensajeros que pueden llevar un paquete dado" {
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    roberto.cambiarTransporte(bicicleta)
+    paquete.pagarEnvio()
+    assert.equals(true, paquete.puedeSerEntregado(roberto))
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(
+      #{roberto},
+      empresaDeMensajeria.mensajerosQuePuedenEntregar(paquete)
+    )
+  }
+  
+  test "Mensajería tiene sobrepeso" {
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    roberto.cambiarTransporte(camion)
+    camion.cantidadDeAcoplados(2) // peso 1000
+    empresaDeMensajeria.contratarMensajero(roberto)
+    assert.equals(true, empresaDeMensajeria.tieneSobrepeso())
+  }
+  
+  test "Enviar paquete: Entregarlo y vheckeo de facturacion" {
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    paquete.pagarEnvio()
+    roberto.cambiarTransporte(bicicleta)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    
+    empresaDeMensajeria.enviar(paquete)
+    assert.equals(empresaDeMensajeria.facturacion(), paquete.precio())
+  }
+  
+  test "Enviar paquete: No puede entregarlo, Agregarlos a pendientes" {
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    roberto.cambiarTransporte(bicicleta)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    
+    empresaDeMensajeria.enviar(paquete)
+    assert.equals(empresaDeMensajeria.pendientes(), [paquete])
+  }
+  
+  test "Dado un conjunto de paquetes, enviarlos a todos." {
+    empresaDeMensajeria.despedirAtodosLosMensajeros()
+    roberto.cambiarTransporte(bicicleta)
+    empresaDeMensajeria.contratarMensajero(roberto)
+    paquete.pagarEnvio()
+    paquetonViajero.pagar(100)
+    neo.recargarCredito()
+    empresaDeMensajeria.contratarMensajero(neo)
+    paquetonViajero.pagar(100)
+    empresaDeMensajeria.enviarTodos([paquete, paquetito, paquetonViajero])
+    assert.equals(
+      empresaDeMensajeria.facturacion(),
+      (paquete.precio() + paquetito.precio()) + paquetonViajero.precio()
+    )
+  }
+  
+  test "Enviar un paqueton" {
+    empresaDeMensajeria.contratarMensajero(chuckNorris)
+    paquetonViajero.pagar(100)
+    empresaDeMensajeria.enviar(paquetonViajero)
+    assert.equals(empresaDeMensajeria.facturacion(), paquetonViajero.precio())
+  }
+
+   test "Paqueton Viajero pendiente con Neo " {
+    empresaDeMensajeria.contratarMensajero(neo)
+    paquetonViajero.pagar(100)
+    empresaDeMensajeria.enviar(paquetonViajero)
+    assert.equals(empresaDeMensajeria.pendientes(), [paquetonViajero])
+  }
+}
